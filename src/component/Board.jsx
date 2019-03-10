@@ -1,48 +1,73 @@
 import React from 'react'
 import '../index.css'
 import Square from './Square'
-//import update from 'react-addons-update'
 
 export default class Board extends React.Component {
     constructor(props) {
         super(props)
-        this.setState({
-            cells: Array(8).fill(null)
-        })
+        this.state = {
+            cells: Array(Math.pow(this.props.size, 2)).fill(null),
+            isFirstPlayerTurn: true,
+            winner: null
+        }
     }
 
     onClick = (idx) => {
-        this.setState({
-            ...this.state,
-            //cells: update(this.state.cells, {idx: {$set: 'X'}})
-        })
+        if (this.state.cells[idx] === null && this.state.winner == null) {
+            var cells = this.state.cells.slice();
+            cells[idx] = this.state.isFirstPlayerTurn ? 'X' : '0';
+            const winner = this.calculateWinner(cells)
+            this.setState({
+                cells: cells,
+                isFirstPlayerTurn: !this.state.isFirstPlayerTurn,
+                winner: winner
+            });
+        }
     }
 
+    calculateWinner(squares) {
+        const lines = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+        for (let i = 0; i < lines.length; i++) {
+            const [a, b, c] = lines[i];
+            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+                return squares[a];
+            }
+        }
+        return null;
+    }
 
-    renderSquare = (i, value, onClick) => {
-        return <Square idx={i} value={value[i]} onClick={onClick}/>
+    renderSquare(i) {
+        return <Square idx={i} value={this.state.cells[i]} onClick={this.onClick}/>
     }
 
     render() {
-        const status = 'Next player: X'
-
+        const status = this.state.winner ? 'Winner is ' + this.state.winner : 'Next player: ' + (this.state.isFirstPlayerTurn ? 'X' : '0')
         return (
             <div>
-                <div className="status">{status}</div>
-                <div className="board-row">
-                    {this.renderSquare(0, this.state.cells, this.onClick)}
-                    {this.renderSquare(1, this.state.cells, this.onClick)}
-                    {this.renderSquare(2, this.state.cells, this.onClick)}
+                <div className='status'>{status}</div>
+                <div className='board-row'>
+                    {this.renderSquare(0)}
+                    {this.renderSquare(1)}
+                    {this.renderSquare(2)}
                 </div>
-                <div className="board-row">
-                    {this.renderSquare(3, this.state.cells, this.onClick)}
-                    {this.renderSquare(4, this.state.cells, this.onClick)}
-                    {this.renderSquare(5, this.state.cells, this.onClick)}
+                <div className='board-row'>
+                    {this.renderSquare(3)}
+                    {this.renderSquare(4)}
+                    {this.renderSquare(5)}
                 </div>
-                <div className="board-row">
-                    {this.renderSquare(6, this.state.cells, this.onClick)}
-                    {this.renderSquare(7, this.state.cells, this.onClick)}
-                    {this.renderSquare(8, this.state.cells, this.onClick)}
+                <div className='board-row'>
+                    {this.renderSquare(6)}
+                    {this.renderSquare(7)}
+                    {this.renderSquare(8)}
                 </div>
             </div>
         )
