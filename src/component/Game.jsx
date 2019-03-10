@@ -1,13 +1,13 @@
 import React from 'react';
 import '../index.css';
-import Board from './Board'
+import ConnectedBoard from './ConnectedBoard'
 
 export default class Game extends React.Component {
     render() {
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board size={3}/>
+                    <ConnectedBoard size={3}/>
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>

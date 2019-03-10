@@ -2,58 +2,16 @@ import React from 'react'
 import '../index.css'
 import Square from './Square'
 
-export default class Board extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            cells: Array(Math.pow(this.props.size, 2)).fill(null),
-            isFirstPlayerTurn: true,
-            winner: null
-        }
-    }
-
-    onClick = (idx) => {
-        if (this.state.cells[idx] === null && this.state.winner == null) {
-            var cells = this.state.cells.slice();
-            cells[idx] = this.state.isFirstPlayerTurn ? 'X' : '0';
-            const winner = this.calculateWinner(cells)
-            this.setState({
-                cells: cells,
-                isFirstPlayerTurn: !this.state.isFirstPlayerTurn,
-                winner: winner
-            });
-        }
-    }
-
-    calculateWinner(squares) {
-        const lines = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
-        for (let i = 0; i < lines.length; i++) {
-            const [a, b, c] = lines[i];
-            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-                return squares[a];
-            }
-        }
-        return null;
-    }
-
+export default class Board extends React.PureComponent {
     renderSquare(i) {
-        return <Square idx={i} value={this.state.cells[i]} onClick={this.onClick}/>
+        return <Square idx={i} value={this.props.body.cells[i]} onClick={this.props.onCellClick}/>
     }
 
     render() {
-        const status = this.state.winner ? 'Winner is ' + this.state.winner : 'Next player: ' + (this.state.isFirstPlayerTurn ? 'X' : '0')
+        console.log("Board called : " + this.props.body.cells)
         return (
             <div>
-                <div className='status'>{status}</div>
+                <div className='status'>{this.props.status}</div>
                 <div className='board-row'>
                     {this.renderSquare(0)}
                     {this.renderSquare(1)}
