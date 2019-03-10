@@ -13,6 +13,12 @@ ol, ul {
   display: table;
 }
 
+.move:after{
+  clear: both;
+  content: "";
+  display: table;
+}
+
 .board-row:after {
   clear: both;
   content: "";

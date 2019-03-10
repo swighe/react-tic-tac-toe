@@ -8,7 +8,6 @@ export default class Board extends React.PureComponent {
     }
 
     render() {
-        console.log("Board called : " + this.props.body.cells)
         return (
             <div>
                 <div className='status'>{this.props.status}</div>

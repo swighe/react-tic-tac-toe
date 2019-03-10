@@ -1,6 +1,7 @@
 import React from 'react'
 import '../index.css'
 import Board from './Board'
+import Moves from './Moves'
 
 export default class ConnectedBoard extends React.Component {
     constructor(props) {
@@ -19,7 +20,6 @@ export default class ConnectedBoard extends React.Component {
 
     goPrev = () => {
         if (this.state.curIdx > 0) {
-            console.log('Prev' + this.state.boards.filter((_, j) => this.state.boards.length - 1 !== j))
             this.setState({
                 boards: this.state.boards.filter((_, j) => this.state.boards.length - 1 !== j),
                 curIdx: this.state.curIdx - 1,
@@ -64,12 +64,27 @@ export default class ConnectedBoard extends React.Component {
         };
     }
 
+    onJumpToClick = (idx) => {
+        if (idx < this.state.boards.length - 1) {
+            this.setState({
+                boards: this.state.boards.filter((_, j) => j <= idx),
+                curIdx: idx,
+                winner: null
+            })
+        }
+    }
+
     render = () => {
         const status = this.state.winner ? 'Winner is ' + this.state.winner : 'Next player: ' + (this.state.boards[this.state.curIdx].isFirstPlayerTurn ? 'X' : '0')
         return (
             <div>
-                <Board body={this.state.boards[this.state.curIdx]} status={status} onCellClick={this.onCellClick}/>
-                <button className='.button' onClick={this.goPrev}>Prev</button>
+                <div className="game">
+                    <Board body={this.state.boards[this.state.curIdx]} status={status} onCellClick={this.onCellClick}/>
+                </div>
+                <div className="game-info">
+                    <button className='.button' onClick={this.goPrev}>Prev</button>
+                    <Moves numMoves={this.state.boards.length-1} onJumpToClick={this.onJumpToClick}/>
+                </div>
             </div>
         )
     }
